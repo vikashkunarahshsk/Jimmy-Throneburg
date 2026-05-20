@@ -1,314 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frank Solano</title>
-  <link rel="icon" type="image/png" href="image/favicon.png">
-  <style>
-    body {
-      margin: 0;
-      background-color: #1a1a1a;
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #2b2b2b;
-    }
-
-    .menu-icon {
-      color: orange;
-      font-size: 24px;
-      margin-right: 20px;
-    }
-
-    .logo {
-      font-size: 36px;
-      font-weight: bold;
-      margin-right: 20px;
-    }
-
-    .search-bar {
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      background-color: #fff;
-      border-radius: 25px;
-      overflow: hidden;
-      min-width: 250px;
-    }
-
-    .search-button {
-      background-color: orange;
-      color: black;
-      padding: 10px 15px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .search-input {
-      border: none;
-      padding: 10px;
-      flex-grow: 1;
-      font-size: 16px;
-      outline: none;
-    }
-    
-    .search-icon {
-      padding: 0 15px;
-      color: #888;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      background-color: #222;
-      padding: 15px 0;
-      gap: 20px;
-    }
-
-    .nav a {
-      color: #FFA31A; /* bright cyan */
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 21px;
-      margin: 5px 20px;
-    }
-
-    .headline {
-      text-align: center;
-      color: red;
-      font-size: 32px;
-      margin: 30px 0 20px;
-    }
-
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-
-    .tag {
-      padding: 10px 15px;
-      background-color: #333;
-      border-radius: 20px;
-      border: 1px solid #fff;
-      font-size: 14px;
-    }
-
-    .gif-grid {
-      display: grid;
-      grid-template-columns: repeat(9, 1fr);
-      gap: 10px;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .gif-container {
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .gif-container img {
-      width: 100%;
-      max-width: 100px;
-      border-radius: 5px;
-    }
-
-    .gif-text {
-      font-size: 12px;
-      margin-top: 5px;
-      color: #ccc;
-    }
-
-    @media (max-width: 1200px) {
-      .gif-grid {
-        grid-template-columns: repeat(6, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .gif-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .header, .search-bar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .search-bar {
-        margin-top: 10px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .gif-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .header-logo-image {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      background-color: #2b2b2b;
-      line-height: 0;
-    }
-
-    .banner-logo {
-      height: 80px;
-      width: 100%;
-      max-width: 1000px;
-      object-fit: contain;
-      display: block;
-      line-height: 0;
-      margin: 0;
-      padding: 0;
-      border: none;
-    }
-  </style>
-  <script>
-    function playVideo(gifUrl) {
-      alert("Video player will be added here for: " + gifUrl);
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mary Dyess-Debord</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const countdownEl = document.getElementById("countdown");
+    if (!countdownEl) return;
+
+    const DURATION_MS = 5 * 60 * 60 * 1000; // 5 hours
+    const STORAGE_KEY = "publish_end_time_v1";
+
+    let endTime = Number(localStorage.getItem(STORAGE_KEY));
+
+    // If endTime is missing or invalid, reset it
+    if (!endTime || isNaN(endTime)) {
+        endTime = Date.now() + DURATION_MS;
+        localStorage.setItem(STORAGE_KEY, endTime);
+    }
+
+    function updateCountdown() {
+        const now = Date.now();
+        let remainingMs = endTime - now;
+
+        if (remainingMs <= 0) {
+            countdownEl.textContent = "🔴 Live Now";
+            localStorage.removeItem(STORAGE_KEY);
+            clearInterval(timer);
+            return;
+        }
+
+        const totalSeconds = Math.floor(remainingMs / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        let label = "Goes live in";
+        if (totalSeconds <= 300) label = "Almost live…";
+        if (totalSeconds <= 60) label = "Final countdown";
+
+        countdownEl.textContent =
+            `${label} ${String(hours).padStart(2, '0')}:` +
+            `${String(minutes).padStart(2, '0')}:` +
+            `${String(seconds).padStart(2, '0')}`;
+    }
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+
+});
+</script>
+
 <body>
-  <div class="header-logo-image">
-    <img src="logo/snake-logo.png" alt="Logo" class="banner-logo">
-  </div>
-
-  <div class="header">
-    <div class="menu-icon">≡</div>
-    <div class="logo">Frank Solano</div>
-    <div class="search-bar">
-      <button class="search-button">AI JERK OFF</button>
-      <input class="search-input" type="text" placeholder="What's on your dirty mind? Turn it into reality">
-      <div class="search-icon">🔍</div>
+    <!-- Floating Pink Lips Effect -->
+    <div class="floating-lips">
+        <span class="lip lip-1">💋</span>
+        <span class="lip lip-2">💋</span>
+        <span class="lip lip-3">💋</span>
+        <span class="lip lip-4">💋</span>
+        <span class="lip lip-5">💋</span>
+        <span class="lip lip-6">💋</span>
+        <span class="lip lip-7">💋</span>
+        <span class="lip lip-8">💋</span>
+        <span class="lip lip-9">💋</span>
+        <span class="lip lip-10">💋</span>
+        <span class="lip lip-11">💋</span>
+        <span class="lip lip-12">💋</span>
     </div>
-  </div>
 
-  <div class="nav">
-    <a href="#">HOME</a>
-    <a href="#">PORN VIDEOS</a>
-    <a href="#">CATEGORIES</a>
-    <a href="#">LIVE CAMS</a>
-    <a href="#">PORNSTARS</a>
-    <a href="#">FUCK NOW</a>
-    <a href="#">COMMUNITY</a>
-    <a href="#">PHOTOS & GIFS</a>
-  </div>l
+    <!-- Parallax Background Layers -->
+    <div class="parallax-bg parallax-bg-1"></div>
+    <div class="parallax-bg parallax-bg-2"></div>
 
- <style>
-  .gif-container img {
-    width: 100%;
-    max-width: 150px;
-    height: auto;
-    border-radius: 5px;
-  }
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Header Logo Image -->
+        <div class="header-logo-image">
+            <img src="images/snake-logo.png" alt="Logo" class="banner-logo">
+        </div>
 
-  .gif-text {
-    text-shadow: 0 0 6px rgba(255, 0, 0, 0.8);
-    font-weight: bold;
-    margin-top: 5px;
-    font-size: 14px;
-    text-align: center;
-  }
-</style>
+        <!-- Header Section -->
+        <header class="header">
+            <div class="menu-icon">≡</div>
+            <div class="logo">Mary Dyess-Debord</div>
+            <div class="search-bar-wrapper">
+                <div class="search-bar">
+                    <button class="search-button">AI JERK OFF</button>
+                    <input class="search-input" type="text" placeholder="What's on your dirty mind? Turn it into reality">
+                    <div class="search-icon">🔍</div>
+                    </div>
+                    <div class="breathing-text" id="countdown">
+                     Goes live in - 02:00:00
+          </div>
 
-  <div class="headline">The Cicada 3301 puzzel (Frank Solano)
+        </header>
+
+        <!-- Navigation Menu -->
+        <nav class="nav">
+            <a href="#">HOME</a>
+            <a href="#">PORN VIDEOS</a>
+            <a href="#">CATEGORIES</a>
+            <a href="#">LIVE CAMS</a>
+            <a href="#">PORNSTARS</a>
+            <a href="#">FUCK NOW</a>
+            <a href="#">COMMUNITY</a>
+            <a href="#">PHOTOS & GIFS</a>
+            <a href="#">SEX MOVIES</a>
+        </nav>
+
+        <!-- Headline -->
+<!-- Headline -->
+<div class="headline-container">
+
+    <!-- Headline Text -->
+    <div class="headline">
+        <span class="headline-red">The Cicada 3301 puzzel</span>
+        <span class="headline-white"> (Mary Dyess-Debord)</span>
+    </div>
+
+    <!-- Existing Button -->
+    <button class="breathing-btn" onclick="location.href='live-game.html'">Live Adult Game</button>
 </div>
 
-  <div class="tags">
-    <div class="tag">trending</div>
-    <div class="tag">live</div>
-    <div class="tag">family</div>
-    <div class="tag">anal sex</div>
-    <div class="tag">japnese</div>
-    <div class="tag">hardsex</div>
-    <div class="tag">vinatge</div>
-    <div class="tag">BBW</div>
-    <div class="tag">gangbang</div>
-    <div class="tag">cumshot</div>
-  </div>
+        <!-- Trending Tags -->
+        <div class="tags">
+            <span class="tag">trending</span>
+            <span class="tag">live</span>
+            <span class="tag">flirtify</span>
+            <span class="tag">anal sex</span>
+            <span class="tag">japnese</span>
+            <span class="tag">hardsex</span>
+            <span class="tag">vinatge</span>
+            <span class="tag">BBW</span>
+            <span class="tag">gangbang</span>
+            <span class="tag">cumshot</span>
+            <span class="tag">milf</span>
+            <span class="tag">ai</span>
+            <span class="tag">lesbian</span>
+            <span class="tag">big ass</span>
+            <span class="tag">stepdaughter</span>
+            <span class="tag">deepthroat</span>
+        </div>
 
-<div class="gif-grid">
-  <!-- 36 GIFs total, 9 per row -->
-  <script>
-    const gifGrid = document.currentScript.parentElement;
-    const gifSamples = Array.from({length: 36}, (_, i) => `gif/gif${i + 1}.gif`);
+        <!-- GIF Grid Section -->
+        <section class="gif-section">
+            <div class="container">
+                <div class="gif-grid">
+                    <!-- GIFs will be dynamically generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </div>
 
-    const labels = [
-  "Self pleasure", "She’s such a tease, you could look at her all day, this view makes your mouth water", "Make her squirt", "Let me make you feel good", "Octavia Red big bouncing boobs",
-  "Ripping her ass apart", "Pounding a blonde teen doggystyle", "Do You Like Pool Sex?", "I need someone who likes my honey like that",
-  "Cumshot on Nerd", "Amazing ass", "There is still room for one more!", "Sexy Amateur Babe Enjoying a Quickie", "Her boss’s favorite",
-  "Teen Cindy Shine gets fucked", "The Perfect Valentine’s", "Anal Cowgirl in Stockings", "Brunette two teens sucks big dick",
-  "Ginger teen gets messy facial", "She loves a cock in all her pretty face", "Warming up your ass for what comes next", "Finishing touches & a happy ending",
-  "When she is alone at home", "Doggystyle fuck with Amia Miley", "It’s mesmerizing to look at", "Licking that pussy lips feels just nice", "I love her itty bitty titties and how she moves",
-  "Madison Ivy sucking cock with passion", "Licking good wet pussy is just so nice", "Naked chick sucking dick", "She is just smashing it in there", "Megan receiving bbc anal doggystyle",
-  "Two sisters blowjob", "Ride and grind that big cock", "Adriana Chechik gets demolished by huge dick", "Hot Anal Sex with a Sexy Teen Brunette"
-];
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Mary Dyess-Debord</h3>
+                    <p class="footer-text">Watch free porn videos, sex movies and premium HD porn.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Today's selection</a></li>
+                        <li><a href="#">Live</a></li>
+                        <li><a href="#">Adult Games</a></li>
+                        <li><a href="#">Dating</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Live</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Pornstars</a></li>
+                        <li><a href="#">AI Sex</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Mary Dyess-Debord. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-for (let i = 0; i < 36; i++) {
-  const gifURL = gifSamples[i % gifSamples.length];
-  const videoURL = 'https://cdn.veporn.com/a-ray-of-cock-sucking-shine-4k.mp4';
-  const container = document.createElement('div');
-  container.className = 'gif-container';
-  container.innerHTML = `<img src="${gifURL}" onclick="playVideo('${videoURL}')">
-    <div class="gif-text">${labels[i]}</div>`;
-      gifGrid.appendChild(container);
-    }
+    <!-- Video Player Overlay (hidden by default) -->
+    <div id="videoOverlay" class="video-overlay" style="display: none;">
+        <button class="close-video-btn">×</button>
+        <video id="videoPlayer" controls autoplay muted></video>
+    </div>
 
-    function playVideo(videoSrc) {
-      const videoOverlay = document.createElement('div');
-      videoOverlay.style.position = 'fixed';
-      videoOverlay.style.top = 0;
-      videoOverlay.style.left = 0;
-      videoOverlay.style.width = '100%';
-      videoOverlay.style.height = '100%';
-      videoOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-      videoOverlay.style.display = 'flex';
-      videoOverlay.style.alignItems = 'center';
-      videoOverlay.style.justifyContent = 'center';
-      videoOverlay.style.zIndex = 1000;
-
-      const video = document.createElement('video');
-      video.src = videoSrc;
-      video.controls = true;
-      video.autoplay = true;
-      video.muted = true;
-      video.style.maxWidth = '90%';
-      video.style.maxHeight = '90%';
-
-      const closeButton = document.createElement('button');
-      closeButton.innerText = '×';
-      closeButton.style.position = 'absolute';
-      closeButton.style.top = '20px';
-      closeButton.style.right = '30px';
-      closeButton.style.fontSize = '36px';
-      closeButton.style.color = '#fff';
-      closeButton.style.background = 'transparent';
-      closeButton.style.border = 'none';
-      closeButton.style.cursor = 'pointer';
-      closeButton.style.zIndex = '1001';
-      closeButton.onclick = function () {
-        video.pause();
-        videoOverlay.remove();
-      };
-
-      videoOverlay.appendChild(video);
-      videoOverlay.appendChild(closeButton);
-      document.body.appendChild(videoOverlay);
-    }
-  </script>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
